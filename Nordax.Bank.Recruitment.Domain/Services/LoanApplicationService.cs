@@ -1,4 +1,5 @@
-﻿using Nordax.Bank.Recruitment.Shared.Models;
+﻿using Nordax.Bank.Recruitment.DataAccess.Repositories;
+using Nordax.Bank.Recruitment.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace Nordax.Bank.Recruitment.Domain.Services
     }
     public class LoanApplicationService : ILoanApplicationService
     {
+        private readonly ILoanApplicationRepository _loanApplicatioRepository;
+        public LoanApplicationService()
+        {
+
+        }
         public Task UploadFileAsync()
         {
             throw new NotImplementedException();

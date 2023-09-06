@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Nordax.Bank.Recruitment.Domain.Services;
 using Nordax.Bank.Recruitment.Models.LoanApplication;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -12,8 +13,10 @@ namespace Nordax.Bank.Recruitment.Controllers
     [Route("api/loan-application")]
     public class LoanApplicationController : ControllerBase
     {
-        public LoanApplicationController()
+        private readonly ILoanApplicationService _loanApplicationService;
+        public LoanApplicationController(ILoanApplicationService loanApplicationService)
         {
+            _loanApplicationService = loanApplicationService;
         }
 
         [HttpPost("attachment")]

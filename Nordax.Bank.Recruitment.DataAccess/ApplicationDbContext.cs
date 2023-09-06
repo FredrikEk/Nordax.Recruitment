@@ -17,7 +17,12 @@ namespace Nordax.Bank.Recruitment.DataAccess
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Subscription>().HasIndex(p => p.Email).IsUnique();
-            modelBuilder.Entity<LoanApplication>().HasOne(c => c.UploadedFile).WithOne(a => a.LoanApplication);
+            modelBuilder.Entity<LoanApplication>()
+                .HasOne(l => l.UploadedFile)
+                .WithOne(u => u.LoanApplication)
+                .HasForeignKey<LoanApplication>(e => e.UploadedFileId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
         }
     }
 }

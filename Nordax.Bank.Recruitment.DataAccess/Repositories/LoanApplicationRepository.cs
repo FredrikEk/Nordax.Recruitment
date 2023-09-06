@@ -26,16 +26,16 @@ namespace Nordax.Bank.Recruitment.DataAccess.Repositories
         {
             _applicationDbContext = dbContextFactory.Create();
         }
-        public async Task<LoanApplicationModel> GetLoanApplicationAsync(Guid loanApplicationId)
+        public async Task<LoanApplicationModel> GetLoanApplicationAsync(Guid fileId)
         {
-            var loanApplication = await _applicationDbContext.LoanApplications.FirstOrDefaultAsync(s => s.UploadedFile.Id == loanApplicationId);
+            var loanApplication = await _applicationDbContext.LoanApplications.Include(l => l.UploadedFile).FirstOrDefaultAsync(s => s.UploadedFile.Id == fileId);
             if (loanApplication == null) throw new LoanApplicationNotFoundException();
             return loanApplication.ToDomainModel();
         }
 
         public IEnumerable<LoanApplicationModel> GetLoanApplications()
         {
-            var loanApplications = _applicationDbContext.LoanApplications.Select(loanApplication => loanApplication.ToDomainModel()).ToList();
+            var loanApplications = _applicationDbContext.LoanApplications.Include(l => l.UploadedFile).Select(loanApplication => loanApplication.ToDomainModel()).ToList();
             if (loanApplications == null) throw new LoanApplicationNotFoundException();
             return loanApplications;
         }

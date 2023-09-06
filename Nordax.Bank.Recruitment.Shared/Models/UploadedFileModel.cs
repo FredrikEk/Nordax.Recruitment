@@ -10,6 +10,6 @@ namespace Nordax.Bank.Recruitment.Shared.Models
     {
         public Guid Id { get; set; }
         public Byte[] Data { get; set; }
-        public LoanApplicationModel LoanApplication { get; set; }
+        public LoanApplicationModel? LoanApplication { get; set; }
     }
 }

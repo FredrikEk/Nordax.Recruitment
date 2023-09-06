@@ -9,6 +9,6 @@ namespace Nordax.Bank.Recruitment.Shared.Models
     public class LoanApplicationModel
     {
         public Guid Id { get; set; }
-        public UploadedFileModel UploadedFile { get; set; }
+        public UploadedFileModel? UploadedFile { get; set; }
     }
 }

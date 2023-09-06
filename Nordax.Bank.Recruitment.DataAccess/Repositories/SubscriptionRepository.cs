@@ -11,8 +11,8 @@ namespace Nordax.Bank.Recruitment.DataAccess.Repositories
     public interface ISubscriptionRepository
     {
         Task<Guid> RegisterSubscriptionAsync(string firstName, string email);
-        Task<SubscriberModel> GetSubscription(Guid subscriberId);
-        Task DeleteSubscription(Guid subscriberId);
+        Task<SubscriberModel> GetSubscriptionAsync(Guid subscriberId);
+        Task DeleteSubscriptionAsync(Guid subscriberId);
     }
 
     public class SubscriptionRepository : ISubscriptionRepository
@@ -35,14 +35,14 @@ namespace Nordax.Bank.Recruitment.DataAccess.Repositories
             return newSubscription.Entity.Id;
         }
 
-        public async Task<SubscriberModel> GetSubscription(Guid subscriberId)
+        public async Task<SubscriberModel> GetSubscriptionAsync(Guid subscriberId)
         {
             var subscriber = await _applicationDbContext.Subscriptions.FirstOrDefaultAsync(s => s.Id == subscriberId);
             if (subscriber == null) throw new UserNotFoundException();
             return subscriber.ToDomainModel();
         }
 
-        public async Task DeleteSubscription(Guid subscriberId)
+        public async Task DeleteSubscriptionAsync(Guid subscriberId)
         {
             var subscriber = await _applicationDbContext.Subscriptions.FirstOrDefaultAsync(s => s.Id == subscriberId);
             if (subscriber == null) throw new UserNotFoundException();

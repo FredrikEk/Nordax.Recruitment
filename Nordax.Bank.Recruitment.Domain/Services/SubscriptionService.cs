@@ -29,13 +29,13 @@ namespace Nordax.Bank.Recruitment.Domain.Services
 
         public async Task<SubscriberModel> GetSubscriberAsync(Guid subscriberId)
         {
-            var subscriber = await _subscriptionRepository.GetSubscription(subscriberId);
+            var subscriber = await _subscriptionRepository.GetSubscriptionAsync(subscriberId);
             return subscriber;
         }
 
         public async Task DeleteSubscriberAsync(Guid subscriberId)
         {
-            await _subscriptionRepository.DeleteSubscription(subscriberId);
+            await _subscriptionRepository.DeleteSubscriptionAsync(subscriberId);
         }
     }
 }

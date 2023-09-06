@@ -22,6 +22,9 @@ namespace Nordax.Bank.Recruitment.DataAccess.Configuration
         private static void AddRepositories(this IServiceCollection services)
         {
             services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddTransient<ILoanApplicationRepository, LoanApplicationRepository>();
+            services.AddTransient<IUploadedFileRepository, UploadedFileRepository>();
+
         }
 
         private static void AddFactories(this IServiceCollection services)

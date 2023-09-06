@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nordax.Bank.Recruitment.Domain.Services;
 using Nordax.Bank.Recruitment.Models.LoanApplication;
 using Swashbuckle.AspNetCore.Annotations;
+using static System.Net.WebRequestMethods;
 
 namespace Nordax.Bank.Recruitment.Controllers
 {
@@ -24,15 +26,22 @@ namespace Nordax.Bank.Recruitment.Controllers
         [ProducesResponseType(typeof(FileResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-	        //TODO: Store file
-	        return Ok();
+            var fileDetails = file.OpenReadStream();
+            byte[] fileContent;
+
+            fileContent = new byte[fileDetails.Length];
+            await fileDetails.ReadAsync(fileContent, 0, (int)fileDetails.Length);
+
+            await _loanApplicationService.UploadFileAsync(fileContent);
+
+            return Ok();
         }
 
         [HttpPost]
         [SwaggerResponse(StatusCodes.Status200OK, "Loan Application registered successfully")]
         public async Task<IActionResult> RegisterLoanApplication([Required] [FromBody] RegisterLoanApplicationRequest request)
         {
-            //TODO: Store Loan Application
+            await _loanApplicationService.RegisterLoanApplicationAsync(request.FileId);
             return Ok();
         }
 
@@ -41,16 +50,17 @@ namespace Nordax.Bank.Recruitment.Controllers
         [ProducesResponseType(typeof(LoanApplicationResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetLoanApplication([FromRoute] Guid fileId)
         {
-	        //TODO: Get Loan Application
-	        return Ok();
+            await _loanApplicationService.GetLoanApplicationAsync(fileId);
+
+            return Ok();
         }
 
         [HttpGet("")]
         [SwaggerResponse(StatusCodes.Status200OK, "Loan Application fetched successfully", typeof(LoanApplicationResponse))]
         [ProducesResponseType(typeof(LoanApplicationResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetLoanApplications()
+        public IActionResult GetLoanApplications()
         {
-            //TODO: Get Loan Applications
+            _loanApplicationService.GetLoanApplications();
             return Ok();
         }
 	}

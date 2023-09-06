@@ -10,34 +10,36 @@ namespace Nordax.Bank.Recruitment.Domain.Services
 {
     public interface ILoanApplicationService
     {
-        Task UploadFileAsync();
-        Task<Guid> RegisterLoanApplicationAsync(string name, string emailAddress);
-        Task<LoanApplicationModel> GetLoanApplicationAsync(Guid subscriberId);
-        Task<IEnumerable<LoanApplicationModel>> GetLoanApplicationsAsync();
+        Task<Guid> UploadFileAsync(byte[] data);
+        Task<Guid> RegisterLoanApplicationAsync(Guid FileId);
+        Task<LoanApplicationModel> GetLoanApplicationAsync(Guid loanApplicationId);
+        IEnumerable<LoanApplicationModel> GetLoanApplications();
     }
     public class LoanApplicationService : ILoanApplicationService
     {
-        private readonly ILoanApplicationRepository _loanApplicatioRepository;
-        public LoanApplicationService()
+        private readonly ILoanApplicationRepository _loanApplicationRepository;
+        private readonly IUploadedFileRepository _uploadedFileRepository;
+        public LoanApplicationService(ILoanApplicationRepository loanApplicationRepository, IUploadedFileRepository uploadedFileRepository)
         {
+            _loanApplicationRepository = loanApplicationRepository;
+            _uploadedFileRepository = uploadedFileRepository;
+        }
+        public Task<Guid> UploadFileAsync(byte[] data)
+        {
+            return _uploadedFileRepository.UploadFileAsync(data);
+        }
+        public Task<Guid> RegisterLoanApplicationAsync(Guid fileId)
+        {
+            return _loanApplicationRepository.RegisterLoanApplicationAsync(fileId);
+        }
+        public Task<LoanApplicationModel> GetLoanApplicationAsync(Guid fileId)
+        {
+            return _loanApplicationRepository.GetLoanApplicationAsync(fileId);
+        }
 
-        }
-        public Task UploadFileAsync()
+        public IEnumerable<LoanApplicationModel> GetLoanApplications()
         {
-            throw new NotImplementedException();
-        }
-        public Task<Guid> RegisterLoanApplicationAsync(string name, string emailAddress)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<LoanApplicationModel> GetLoanApplicationAsync(Guid subscriberId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<LoanApplicationModel>> GetLoanApplicationsAsync()
-        {
-            throw new NotImplementedException();
+            return _loanApplicationRepository.GetLoanApplications();
         }
     }
 }

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Nordax.Bank.Recruitment.Shared.Models
 {
-    public class LoanApplicationModel
+    public class UploadedFileModel
     {
         public Guid Id { get; set; }
-        public UploadedFileModel UploadedFile { get; set; }
+        public Byte[] Data { get; set; }
+        public LoanApplicationModel LoanApplication { get; set; }
     }
 }

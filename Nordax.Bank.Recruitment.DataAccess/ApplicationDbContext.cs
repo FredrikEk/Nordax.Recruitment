@@ -10,11 +10,14 @@ namespace Nordax.Bank.Recruitment.DataAccess
         }
 
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<LoanApplication> LoanApplications { get; set; }
+        public DbSet<UploadedFile> UploadedFiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Subscription>().HasIndex(p => p.Email).IsUnique();
+            modelBuilder.Entity<LoanApplication>().HasOne(c => c.UploadedFile).WithOne(a => a.LoanApplication);
         }
     }
 }

@@ -11,11 +11,13 @@ namespace Nordax.Bank.Recruitment.DataAccess.Entities
     public class LoanApplication
     {
         public Guid Id { get; set; }
+        public UploadedFile UploadedFile { get; set; }
         public LoanApplicationModel ToDomainModel()
         {
             return new LoanApplicationModel()
             {
                 Id = Id,
+                UploadedFile = UploadedFile.ToDomainModel()
             };
         }
     }

@@ -42,6 +42,7 @@ namespace Nordax.Bank.Recruitment.Controllers
             }
             catch(Exception e)
             {
+                Console.WriteLine(e);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

@@ -1,3 +1,8 @@
-﻿namespace Nordax.Bank.Recruitment.Models.LoanApplication;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record RegisterLoanApplicationRequest();
+namespace Nordax.Bank.Recruitment.Models.LoanApplication;
+
+public record RegisterLoanApplicationRequest(
+    [Required]string Name, 
+    string Description
+);

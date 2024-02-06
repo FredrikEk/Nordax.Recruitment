@@ -8,6 +8,7 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
     public DbSet<Subscription> Subscriptions { get; set; }
+    public DbSet<LoanApplication> LoanApplications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -28,6 +28,9 @@
     "reactstrap": "^9.2.0",
     "rimraf": "^5.0.5"
   },
+  "overrides": {
+    "typescript": "^5.2.2"
+  },
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3",
     "@types/reactstrap": "^8.7.1",

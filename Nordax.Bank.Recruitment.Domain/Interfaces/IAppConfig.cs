@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Nordax.Bank.Recruitment.Domain.Interfaces;
+﻿namespace Nordax.Bank.Recruitment.Domain.Interfaces;
 
 public interface IAppConfig
 {

@@ -20,8 +20,8 @@ public class LoanApplicationRepository : ILoanApplicationRepository
     }
     public async Task<Guid> RegisterLoanApplicationAsync(string name, string description)
     {
-        //if (await _applicationDbContext.Subscriptions.AnyAsync(s => s.Email == email))
-        //    throw new EmailAlreadyRegisteredException();
+       if (await _applicationDbContext.LoanApplications.AnyAsync(la => la.Name == name))
+            throw new LoanApplicationPendingException();
 
         var newLoanApplication = await _applicationDbContext.LoanApplications.AddAsync(new LoanApplication(name, description));
         await _applicationDbContext.SaveChangesAsync();
@@ -30,16 +30,14 @@ public class LoanApplicationRepository : ILoanApplicationRepository
     }
     public async Task<LoanApplicationModel> GetLoanApplication(Guid fileId)
     {
-        var loanApplication = await _applicationDbContext.LoanApplications.FirstOrDefaultAsync(s => s.Id == fileId);
-        if (loanApplication == null) throw new FileNotFoundException();
+        var loanApplication = await _applicationDbContext.LoanApplications.FirstOrDefaultAsync(la => la.Id == fileId);
+        if (loanApplication == null) throw new LoanApplicationNotFoundException();
         return loanApplication.ToDomainModel();
     }
     public async Task<List<LoanApplicationModel>> GetLoanApplications()
     {
-        //Mer läsbart att konvertera den till domain model vid return, men såhär slapp jag konvertera till list två gånger pga select.
-        //
         var loanApplicationDomainModels = await _applicationDbContext.LoanApplications.Select(la => la.ToDomainModel()).ToListAsync();
-        if (loanApplicationDomainModels.Count < 1) throw new FileNotFoundException();
+        if (loanApplicationDomainModels.Count < 1) throw new LoanApplicationNotFoundException();
         
         return loanApplicationDomainModels;
     }

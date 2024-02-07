@@ -29,13 +29,21 @@ public class LoanApplicationController : ControllerBase
     [ProducesResponseType(typeof(FileResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> UploadFile(IFormFile file)
     {
-        //TODO: Store file
-        return Ok();
+        try
+        {
+            //var loanApplicationId = await _loanApplicationCommands.UploadFileAsync(request.Name, request.Description);
+            return Ok(new FileResponse());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> RegisterLoanApplication([Required] [FromBody] RegisterLoanApplicationRequest request)
+    public async Task<IActionResult> RegisterLoanApplication([Required] [FromBody] NewLoanApplicationRequest request)
     {
         try
         {
@@ -44,7 +52,7 @@ public class LoanApplicationController : ControllerBase
         }
         catch (Exception e)
         {
-            if (e is EmailAlreadyRegisteredException) return Conflict($"Email {request.Name} already registered");
+            if (e is LoanApplicationPendingException) return Conflict($"User {request.Name} already has a pending application");
             Console.WriteLine(e);
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
@@ -61,7 +69,7 @@ public class LoanApplicationController : ControllerBase
         }
         catch (Exception e)
         {
-            if (e is UserNotFoundException) return NotFound("No file found with that id");
+            if (e is LoanApplicationNotFoundException) return NotFound("No application found with that id");
             Console.WriteLine(e);
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
@@ -78,7 +86,6 @@ public class LoanApplicationController : ControllerBase
         }
         catch (Exception e)
         {
-            if (e is UserNotFoundException) return NotFound("No file found with that id");
             Console.WriteLine(e);
             return StatusCode(StatusCodes.Status500InternalServerError);
         }

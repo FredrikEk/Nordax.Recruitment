@@ -2,7 +2,7 @@
 
 namespace Nordax.Bank.Recruitment.Models.LoanApplication;
 
-public record RegisterLoanApplicationRequest(
+public record NewLoanApplicationRequest(
     [Required]string Name, 
     string Description
 );

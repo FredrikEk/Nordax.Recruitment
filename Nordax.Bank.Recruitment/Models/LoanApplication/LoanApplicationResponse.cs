@@ -1,3 +1,5 @@
-﻿namespace Nordax.Bank.Recruitment.Models.LoanApplication;
+﻿using System;
 
-public record LoanApplicationResponse();
+namespace Nordax.Bank.Recruitment.Models.LoanApplication;
+
+public record LoanApplicationResponse(Guid Id, string Name, Guid FileId);

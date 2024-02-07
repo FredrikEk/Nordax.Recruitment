@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Core;
@@ -29,10 +30,19 @@ public class LoanApplicationController : ControllerBase
     [ProducesResponseType(typeof(FileResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> UploadFile(IFormFile file)
     {
+        //Hade jag lagt mer tid så hade jag gjort en generisk filhanterare som accepterar enbart
+        //specifika filer enligt kravspec och eventuellt begränsa storlek
         try
         {
-            //var loanApplicationId = await _loanApplicationCommands.UploadFileAsync(request.Name, request.Description);
-            return Ok(new FileResponse());
+            byte[] content;
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                content = stream.ToArray();
+            }
+
+            var fileId = await _loanApplicationCommands.UploadFileAsync(file.FileName, file.ContentType, content);
+            return Ok(new FileResponse(fileId));
         }
         catch (Exception e)
         {
@@ -47,7 +57,7 @@ public class LoanApplicationController : ControllerBase
     {
         try
         {
-            var loanApplicationId = await _loanApplicationCommands.RegisterLoanApplicationAsync(request.Name, request.Description);
+            var loanApplicationId = await _loanApplicationCommands.RegisterLoanApplicationAsync(request.Name, request.FileId, request.Description);
             return Ok(new NewLoanApplicationResponse(loanApplicationId));
         }
         catch (Exception e)
@@ -58,14 +68,14 @@ public class LoanApplicationController : ControllerBase
         }
     }
 
-    [HttpGet("{fileId:Guid}")]
+    [HttpGet("{loanApplicationId:Guid}")]
     [ProducesResponseType(typeof(LoanApplicationResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetLoanApplication([FromRoute] Guid fileId)
+    public async Task<IActionResult> GetLoanApplication([FromRoute] Guid loanApplicationId)
     {
         try
         {
-            var loanApplication = await _loanApplicationQueries.GetLoanApplicationAsync(fileId);
-            return Ok(new LoanApplicationResponse(loanApplication.Name, loanApplication.Id));
+            var loanApplication = await _loanApplicationQueries.GetLoanApplicationAsync(loanApplicationId);
+            return Ok(new LoanApplicationResponse(loanApplication.Id, loanApplication.Name, loanApplication.FileId));
         }
         catch (Exception e)
         {
@@ -82,7 +92,7 @@ public class LoanApplicationController : ControllerBase
         try
         {
             var loanApplications = await _loanApplicationQueries.GetLoanApplicationsAsync();
-            return Ok(loanApplications.Select(la => new LoanApplicationResponse(la.Name, la.Id)));
+            return Ok(loanApplications.Select(la => new LoanApplicationResponse(la.Id, la.Name, la.FileId)));
         }
         catch (Exception e)
         {

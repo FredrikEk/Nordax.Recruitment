@@ -10,9 +10,17 @@ public class LoanApplicationCommands : ILoanApplicationCommands
     {
         _loanApplicationRepository = loanApplicationRepository;
     }
-    public async Task<Guid> RegisterLoanApplicationAsync(string name, string description)
+
+    public async Task<Guid> UploadFileAsync(string fileName, string contentType, byte[] content)
     {
-        var loanApplicationId = await _loanApplicationRepository.RegisterLoanApplicationAsync(name, description);
+        
+        var fileId = await _loanApplicationRepository.UploadFileAsync(fileName, contentType, content);
+        return fileId;
+    }
+
+    public async Task<Guid> RegisterLoanApplicationAsync(string name, Guid fileId, string description)
+    {
+        var loanApplicationId = await _loanApplicationRepository.RegisterLoanApplicationAsync(name, fileId, description);
         return loanApplicationId;
     }
 }

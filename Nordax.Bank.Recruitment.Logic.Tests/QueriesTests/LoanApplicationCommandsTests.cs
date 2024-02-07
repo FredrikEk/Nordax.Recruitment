@@ -22,9 +22,10 @@ public class LoanApplicationCommandsTests
     {
         
         var name = "firstName";
+        var fileId = new Guid();
         var description = "nonEmptyString";
-        await _loanApplicationCommands.RegisterLoanApplicationAsync(name, description);
+        await _loanApplicationCommands.RegisterLoanApplicationAsync(name, fileId, description);
 
-        _loanApplicationRepositoryMock.Verify(a => a.RegisterLoanApplicationAsync(name, description));
+        _loanApplicationRepositoryMock.Verify(a => a.RegisterLoanApplicationAsync(name, fileId, description));
     }
 }

@@ -12,9 +12,9 @@ public class LoanApplicationQueries : ILoanApplicationQueries
         _loanApplicationRepository = loanApplicationRepository;
     }
 
-    public async Task<LoanApplicationModel> GetLoanApplicationAsync(Guid fileId)
+    public async Task<LoanApplicationModel> GetLoanApplicationAsync(Guid loanApplicationId)
     {
-        var loanApplication = await _loanApplicationRepository.GetLoanApplication(fileId);
+        var loanApplication = await _loanApplicationRepository.GetLoanApplication(loanApplicationId);
         return loanApplication;
     }
     public async Task<List<LoanApplicationModel>> GetLoanApplicationsAsync()

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Nordax.Bank.Recruitment.Domain.Interfaces.Queries;
 public interface ILoanApplicationQueries
 {
-    Task<LoanApplicationModel> GetLoanApplicationAsync(Guid fileId);
+    Task<LoanApplicationModel> GetLoanApplicationAsync(Guid loanApplicationId);
     Task<List<LoanApplicationModel>> GetLoanApplicationsAsync();
 }
 

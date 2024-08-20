@@ -1,17 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nordax.Bank.Recruitment.DataAccess.Entities;
 
-namespace Nordax.Bank.Recruitment.DataAccess;
-
-public class ApplicationDbContext : DbContext
+namespace Nordax.Bank.Recruitment.DataAccess
 {
-    public ApplicationDbContext(DbContextOptions options) : base(options) { }
-
-    public DbSet<Subscription> Subscriptions { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public class ApplicationDbContext : DbContext
     {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Subscription>().HasIndex(p => p.Email).IsUnique();
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Subscription> Subscriptions { get; set; }
+
+        public DbSet<Loan> Loans {get; set;}
+
+        public DbSet<FileRecord> FileRecords{get; set;}
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Subscription>().HasIndex(p => p.Email).IsUnique();
+        }
     }
 }

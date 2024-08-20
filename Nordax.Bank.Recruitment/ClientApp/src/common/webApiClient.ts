@@ -1,82 +1,83 @@
-﻿import {IHttpClient} from "./httpClient";
+﻿import { IHttpClient } from "./httpClient";
 
 export function WebApiClient(): IHttpClient {
-    const webApiClient: IHttpClient = {
-        async get<T>(url: string): Promise<T> {
-            const response = await fetch(url, {
-                credentials: "same-origin",
-            });
-            if (!response.ok) throw response;
+  const webApiClient: IHttpClient = {
+    async get<T>(url: string): Promise<T> {
+      const response = await fetch(url, {
+        credentials: "same-origin",
+      });
+      if (!response.ok) throw response;
 
-            return parseResponse<T>(response);
-        },
+      return parseResponse<T>(response);
+    },
 
-        async post<T>(
-        url: string,
-        data?: any,
-        appendHeaders?: Record<string, string>
-        ): Promise<T> {
-            const response = await fetch(url, {
-                headers: getHeaders(appendHeaders || {}),
-                method: "post",
-                credentials: "same-origin",
-                body: data ? JSON.stringify(data) : undefined
-            });
+    async post<T>(
+      url: string,
+      data?: any,
+      appendHeaders?: Record<string, string>
+    ): Promise<T> {
+      const isFileUpload = data instanceof FormData;
+      const formData = isFileUpload ? data : JSON.stringify(data);
 
-            if (!response.ok) throw response;
+      const response = await fetch(url, {
+        headers: isFileUpload ? undefined : getHeaders(appendHeaders || {}),
+        method: "post",
+        credentials: "same-origin",
+        body: formData,
+      });
 
-            return parseResponse<T>(response);
-        },
+      if (!response.ok) throw response;
 
-        async put<T>(
-            url: string,
-            data?: any,
-            appendHeaders?: Record<string, string>
-        ): Promise<T> {
-            const response = await fetch(url, {
-                headers: getHeaders(appendHeaders || {}),
-                method: "put",
-                credentials: "same-origin",
-                body: data ? JSON.stringify(data) : undefined
-            });
+      return parseResponse<T>(response);
+    },
 
-            if (!response.ok) throw response;
+    async put<T>(
+      url: string,
+      data?: any,
+      appendHeaders?: Record<string, string>
+    ): Promise<T> {
+      const response = await fetch(url, {
+        headers: getHeaders(appendHeaders || {}),
+        method: "put",
+        credentials: "same-origin",
+        body: data ? JSON.stringify(data) : undefined,
+      });
 
-            return parseResponse<T>(response);
-        },
+      if (!response.ok) throw response;
 
-        async delete<T>(url: string): Promise<T> {
-            const response = await fetch(url, {
-                headers: getHeaders({}),
-                method: "delete",
-            });
+      return parseResponse<T>(response);
+    },
 
-            if (!response.ok) throw response;
+    async delete<T>(url: string): Promise<T> {
+      const response = await fetch(url, {
+        headers: getHeaders({}),
+        method: "delete",
+      });
 
-            return parseResponse<T>(response);
-        }
-    };
+      if (!response.ok) throw response;
 
+      return parseResponse<T>(response);
+    },
+  };
 
-
-    return webApiClient;
+  return webApiClient;
 }
 
 async function parseResponse<T>(response: Response) {
-    let result = {};
-    try {
-        result = await response.json();
-    } catch (e) {
-        console.log("Response could not be parsed");
-    }
-    return result as T;
+  let result = {};
+  try {
+    result = await response.json();
+  } catch (e) {
+    console.log("Response could not be parsed");
+  }
+  return result as T;
 }
 
 function getHeaders(appendHeaders: Record<string, string>): Headers {
-    const headers = new Headers({
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        ...appendHeaders
-    });
-    return headers;
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    ...appendHeaders,
+  });
+  return headers;
 }

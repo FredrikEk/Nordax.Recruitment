@@ -21,6 +21,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAppConfig>(s => s.GetRequiredService<IOptions<AppConfig>>().Value);
         services.AddTransient<ISubscriptionCommands, SubscriptionCommands>();
         services.AddTransient<ISubscriptionQueries, SubscriptionQueries>();
+        services.AddTransient<ILoanCommands, LoanCommands>();
+        services.AddTransient<ILoanQueries, LoanQueries>();
         services.AddEntityFramework(configuration);
 
         services.AddDataAccessServices();
@@ -39,5 +41,6 @@ public static class ServiceCollectionExtensions
     private static void AddRepositories(this IServiceCollection services)
     {
         services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+        services.AddTransient<ILoanRepository, LoanRepository>();
     }
 }
